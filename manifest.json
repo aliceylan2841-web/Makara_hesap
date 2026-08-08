@@ -1,21 +1,42 @@
 {
-  "name": "Makara Hesaplama",
-  "short_name": "ACAMAY",
-  "description": "LGS Gelişim ve Takip Sistemi",
-  "start_url": "index.html",
+  "name": "Kablo Makara Hesaplayıcı Pro",
+  "short_name": "Makara Hesap",
+  "description": "Kablo için uygun makarayı hesaplayan, makara kütüphanesini yönetmenizi sağlayan profesyonel hesap aracı.",
+  "id": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7f9",
-  "theme_color": "#004a99",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#f4f7f6",
+  "theme_color": "#1565c0",
+  "lang": "tr",
+  "dir": "ltr",
+  "categories": ["utilities", "productivity", "business"],
   "icons": [
     {
-      "src": "https://i.ibb.co/84mb5gYg/file-00000000ce8c72439cfbe8e2985449ed.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "https://i.ibb.co/84mb5gYg/file-00000000ce8c72439cfbe8e2985449ed.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

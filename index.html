@@ -2,16 +2,37 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Kablo Makara Hesaplayıcı Pro v4</title>
+
+    <!-- PWA: Manifest ve tema ayarları -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1565c0">
+    <meta name="description" content="Kablo için uygun makarayı hesaplayan, makara kütüphanesini yönetmenizi sağlayan profesyonel hesap aracı.">
+
+    <!-- iOS (Add to Home Screen) desteği -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Makara Hesap">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
     <style>
         /* Ekranın kaymasını engelleyen sabit yapı - Safari fix */
+        :root {
+            --app-height: 100vh; /* JS tarafından anlık olarak güncellenir (bkz. setAppHeight) */
+        }
         html { 
+            height: 100%;
             height: -webkit-fill-available;
         }
         body { 
             height: 100vh;
+            height: 100dvh;
             height: -webkit-fill-available;
+            height: var(--app-height); /* en son: JS'in ölçtüğü gerçek görünür yükseklik kazanır */
             margin: 0; 
             padding: 0; 
             overflow: hidden; 
@@ -23,7 +44,9 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            height: 100dvh;
             height: -webkit-fill-available;
+            height: var(--app-height); /* en son: JS'in ölçtüğü gerçek görünür yükseklik kazanır */
             width: 100%;
             max-width: 550px;
             margin: 0 auto;
@@ -124,7 +147,7 @@
         <div style="background:white; border-radius:10px; overflow:hidden; position:relative;">
             <span onclick="rehberKapat()" style="position:absolute; top:10px; right:14px; font-size:28px; cursor:pointer; color:white; line-height:1; z-index:10; text-shadow:0 1px 4px rgba(0,0,0,0.8);">×</span>
             <div style="text-align:center; font-size:14px; font-weight:900; color:#1565c0; letter-spacing:1px; margin-bottom:12px; border-bottom:2px solid #eee; padding:14px 16px 10px;">📐 MAKARA ÖLÇÜLERİ REHBERİ</div>
-            <img src="1000215891.png" alt="Makara Ölçüleri" style="width:100%; display:block; margin-bottom:0;">
+            <img src="1000215891.png" alt="Makara Ölçüleri" style="width:100%; display:block; margin-bottom:0;" onerror="this.style.display='none';">
             <!-- Hacim Hesaplama -->
             <div style="padding:14px 16px 16px;">
             <div style="background:#f0f4ff; border:2px solid #1565c0; border-radius:10px; padding:12px;">
@@ -166,7 +189,7 @@
     <div id="pageHesapla" class="page-content">
         <h2>Kablo Seçimi</h2>
         <div class="tabs">
-            <button id="btnYuvarlak" class="tab-btn active" onclick="setTur('Yuvarlak Kablo')">Yuvarlak Kablo</button>
+            <button id="btnYuvarlak" class="tab-btn active" onclick="setTur('yuvarlak')">Yuvarlak Kablo</button>
             <button id="btnYassi" class="tab-btn" onclick="setTur('yassi')">Yassı Kablo</button>
         </div>
         <div id="yuvarlakAlan">
@@ -223,6 +246,27 @@
     let kabloTuru = 'yuvarlak';
     let düzenlemeIndex = -1;
     let currentPage = 'hesapla';
+
+    // ============================================================
+    // GERÇEK EKRAN YÜKSEKLİĞİ DÜZELTMESİ (Android/Chrome 100vh sorunu)
+    // Mobil tarayıcılarda, özellikle klavye açılıp kapandığında,
+    // 100vh eski/yanlış bir değerde "donuk" kalabiliyor. Bunun yerine
+    // gerçek görünür yüksekliği JS ile ölçüp bir CSS değişkenine
+    // (--app-height) yazıyoruz; body/.container bunu kullanıyor.
+    // ============================================================
+    function setAppHeight() {
+        const yukseklik = (window.visualViewport && window.visualViewport.height)
+            ? window.visualViewport.height
+            : window.innerHeight;
+        document.documentElement.style.setProperty('--app-height', yukseklik + 'px');
+    }
+    setAppHeight();
+    window.addEventListener('resize', setAppHeight);
+    window.addEventListener('orientationchange', setAppHeight);
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', setAppHeight);
+    }
+    document.addEventListener('DOMContentLoaded', setAppHeight);
 
     // ============================================================
     // VERSİYON KONTROLÜ
@@ -320,6 +364,8 @@
 
     function showPage(page) {
         currentPage = page;
+        const pages = { hesapla: 'pageHesapla', manual: 'pageManual', admin: 'pageAdmin' };
+
         document.getElementById('pageHesapla').style.display = page === 'hesapla' ? 'block' : 'none';
         document.getElementById('pageManual').style.display = page === 'manual' ? 'block' : 'none';
         document.getElementById('pageAdmin').style.display = page === 'admin' ? 'block' : 'none';
@@ -330,6 +376,15 @@
 
         
         if(page === 'admin') listeYenile();
+
+        // Sekme değişince yeni sayfayı her zaman en üstten göster
+        // (önceki kaydırma konumu kalıp ekranın "tam gelmemiş" görünmesini engeller)
+        document.getElementById(pages[page]).scrollTop = 0;
+
+        // Klavye açıkken sekme değiştirilmiş olabilir: odağı kaldır ve
+        // gerçek ekran yüksekliğini yeniden ölç (Android'de 100vh klavye
+        // kapandıktan sonra bazen eski/küçük değerde "donuk" kalıyordu).
+        kaydirmaVeYukseklikDuzelt();
     }
 
     function setTur(tur) {
@@ -338,6 +393,39 @@
         document.getElementById('yassiAlan').style.display = tur === 'yassi' ? 'block' : 'none';
         document.getElementById('btnYuvarlak').classList.toggle('active', tur === 'yuvarlak');
         document.getElementById('btnYassi').classList.toggle('active', tur === 'yassi');
+
+        // Kablo türü değişince, ilgili ölçü kutularındaki eski değerleri
+        // otomatik temizle (yanlışlıkla eski çap/en/boy değeriyle hesap
+        // yapılmasın diye)
+        document.getElementById('cap').value = '';
+        document.getElementById('en').value = '';
+        document.getElementById('boy').value = '';
+
+        // Yassı <-> Yuvarlak geçişinde önceki sonuç kutusunu temizle ve
+        // sayfayı en üste kaydır. Aksi halde eski (uzun/kısa) sonuç kutusu
+        // kaydırma konumunu bozup ekranın "tam gelmemesine" (kesik görünmesine) sebep oluyordu.
+        const sonucDiv = document.getElementById('sonuc');
+        sonucDiv.style.display = 'none';
+        sonucDiv.innerHTML = '';
+        document.getElementById('pageHesapla').scrollTop = 0;
+
+        // Klavye açık haldeyken (En/Boy veya Çap kutusuna yazarken) tür
+        // değiştirilirse, klavye kapanınca tarayıcının 100vh ölçümü eski
+        // (klavye-açık) değerde takılı kalabiliyordu. Odağı kaldırıp
+        // yüksekliği yeniden hesaplıyoruz.
+        kaydirmaVeYukseklikDuzelt();
+    }
+
+    // Aktif input varsa klavyeyi kapat, ardından gerçek görünür alan
+    // yüksekliğini (--app-height) yeniden ölç. Klavye kapanma animasyonu
+    // bittikten sonra ölçüm net olsun diye kısa bir gecikmeyle tekrar ölçülür.
+    function kaydirmaVeYukseklikDuzelt() {
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+            document.activeElement.blur();
+        }
+        setAppHeight();
+        setTimeout(setAppHeight, 60);
+        setTimeout(setAppHeight, 300);
     }
 
     function parseNum(id) {
@@ -493,6 +581,15 @@
 
     // Uygulama açılışında listeyi yükle
     listeYenile();
+
+    // Service Worker kaydı (PWA: offline çalışma + yüklenebilirlik için gereklidir)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch((err) => {
+                console.warn('Service worker kaydı başarısız:', err);
+            });
+        });
+    }
 </script>
 </body>
 </html>
