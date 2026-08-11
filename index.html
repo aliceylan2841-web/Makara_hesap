@@ -582,6 +582,16 @@
     // Uygulama açılışında listeyi yükle
     listeYenile();
 
+    // PWA kısayolları (manifest "shortcuts") için hash yönlendirmesi:
+    // index.html#manual veya index.html#admin ile açılırsa doğrudan o
+    // sekmeyi göster. Hash yoksa/#hesapla ise varsayılan sekmede kalır.
+    (function hashYonlendirmesiUygula() {
+        const hash = (window.location.hash || '').replace('#', '');
+        if (hash === 'manual' || hash === 'admin' || hash === 'hesapla') {
+            showPage(hash);
+        }
+    })();
+
     // Service Worker kaydı (PWA: offline çalışma + yüklenebilirlik için gereklidir)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

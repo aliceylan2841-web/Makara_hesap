@@ -1,7 +1,7 @@
 // Kablo Makara Hesaplayıcı Pro - Service Worker
 // Sürümü güncellediğinizde CACHE_NAME'i değiştirin (ör: v2, v3) ki
 // kullanıcıların cihazındaki eski dosyalar temizlenip yenisiyle değişsin.
-const CACHE_NAME = 'makara-hesap-v1';
+const CACHE_NAME = 'makara-hesap-v2';
 
 const CORE_ASSETS = [
   './',
