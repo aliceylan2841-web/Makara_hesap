@@ -56,19 +56,72 @@
             overflow: hidden;
         }
         
-        /* Logo Alanı */
-        .logo-container { text-align: center; padding: 8px 0; background: white; border-bottom: 1px solid #eee; position: relative; }
-        .logo-container img { max-width: 200px; height: 100px; display: block; margin: 0 auto; }
+        /* Logo Alanı - Ahşap Desen */
+        .logo-container {
+            text-align: center;
+            padding: 10px 0 8px;
+            position: relative;
+            overflow: hidden;
+            background-image: url('data:image/jpeg;base64,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');
+            background-size: cover;
+            background-position: center;
+            border-bottom: 3px solid #3e2712;
+            box-shadow: inset 0 -6px 10px rgba(0,0,0,0.35), inset 0 3px 6px rgba(255,255,255,0.08);
+        }
+        .logo-container::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%);
+            pointer-events: none;
+        }
+        .logo-container h1 {
+            position: relative;
+            margin: 0;
+            padding: 0 42px;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-style: italic;
+            color: #f4d9a8;
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+            text-shadow: 0 1px 0 #2e1a0a, 0 2px 3px rgba(0,0,0,0.6), 0 0 14px rgba(244,217,168,0.25);
+        }
+        .logo-container h1 span {
+            display: block;
+            font-family: Georgia, serif;
+            font-style: normal;
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 3.5px;
+            color: #ecd8b8;
+            opacity: 0.85;
+            margin-top: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+        }
+        .logo-signature {
+            position: absolute;
+            right: 12px;
+            bottom: 4px;
+            font-family: 'Brush Script MT', 'Segoe Script', cursive;
+            font-style: italic;
+            font-size: 13px;
+            color: rgba(244,217,168,0.75);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+            transform: rotate(-4deg);
+            z-index: 2;
+        }
 
         /* Bilgi Butonu */
         .info-trigger {
             position: absolute;
-            right: 15px;
-            top: 15px;
+            left: 12px;
+            top: 12px;
             width: 30px;
             height: 30px;
-            background: #1565c0;
-            color: white;
+            background: white;
+            color: #1565c0;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -99,7 +152,7 @@
 
         /* Ana Sekmeler */
         .main-tabs { display: flex; background: #f8f9fa; border-bottom: 2px solid #1565c0; }
-        .main-tab-btn { flex: 1; padding: 12px 5px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; color: #666; font-size: 11px; text-transform: uppercase; }
+        .main-tab-btn { flex: 1; padding: 12px 3px; border: none; background: #f8f9fa; cursor: pointer; font-weight: bold; color: #666; font-size: 10px; text-transform: uppercase; line-height: 1.3; }
         .main-tab-btn.active { background: white; color: #1565c0; position: relative; }
         .main-tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 5px; background: #1565c0; }
 
@@ -177,12 +230,14 @@
     </div>
 
     <div class="logo-container">
-        <img src="https://i.ibb.co/0j90jQkp/file-00000000249072469c0da962473d3c9a.png" alt="Logo">
+        <h1>Makara Hesaplama<span>Kablo &amp; Sarım Aracı</span></h1>
+        <div class="logo-signature">Acamay</div>
     </div>
 
     <div class="main-tabs">
         <button id="tabCalc" class="main-tab-btn active" onclick="showPage('hesapla')">Otomatik Hesaplama</button>
         <button id="tabManual" class="main-tab-btn" onclick="showPage('manual')">Manuel Hesap</button>
+        <button id="tabSarim" class="main-tab-btn" onclick="showPage('sarim')">Sarım Hesabı</button>
         <button id="tabAdmin" class="main-tab-btn" onclick="showPage('admin')">Makara Yönetimi</button>
     </div>
 
@@ -224,6 +279,29 @@
             <span style="font-weight:bold; font-size:12px;">NET KAPASİTE</span>
             <span class="res-val"><span id="m_metre">0</span> <small style="font-size:14px;">METRE</small></span>
         </div>
+    </div>
+
+    <div id="pageSarim" class="page-content" style="display:none;">
+        <h2>Normal Sarım Hesabı (Kat Kat / Yan Yana)</h2>
+        <button onclick="document.getElementById('rehberOverlay').style.display='block'" style="width:100%; padding:10px; background:#e3f2fd; color:#1565c0; border:2px solid #1565c0; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; margin-bottom:10px;">📐 Ölçü Rehberi &amp; Hacim Hesapla</button>
+        <p style="font-size:12px; color:#666; margin:0 0 10px 0; line-height:1.4;">Göbekten dışa doğru <b>kat kat</b>, her katta <b>yan yana</b> gerçek sarım hesabı. Her kat kendi ortalama çapına göre ayrı hesaplanır. Tolerans, Otomatik Hesaplama'daki ile aynı kademeli tabloyu kullanır.</p>
+
+        <div class="manual-row"><label>Kablo Çapı (mm)</label><input type="number" id="s_cap" placeholder="0" oninput="sarimHesapla()"></div>
+        <div class="manual-row"><label>Makara Dış Çap (A) (cm)</label><input type="number" id="s_makA" placeholder="0" oninput="sarimHesapla()"></div>
+        <div class="manual-row"><label>İç Genişlik (C) (cm)</label><input type="number" id="s_makC" placeholder="0" oninput="sarimHesapla()"></div>
+        <div class="manual-row"><label>Göbek Çapı (D) (cm)</label><input type="number" id="s_makD" placeholder="0" oninput="sarimHesapla()"></div>
+
+        <div id="s_toleransInfo" style="font-size:11px; color:#1565c0; background:#eef4ff; border-radius:6px; padding:8px 10px; margin-top:8px; display:none;"></div>
+        <div id="s_uyari" style="display:none; font-size:12px; color:#c62828; background:#ffebee; border:1px solid #ffcdd2; border-radius:6px; padding:8px 10px; margin-top:8px;"></div>
+
+        <div id="s_ozet"></div>
+        <div id="s_tablo"></div>
+
+        <div class="manual-result-box">
+            <span style="font-weight:bold; font-size:12px;">TOPLAM UZUNLUK (Kat Bazlı Hassas Hesap)</span>
+            <span class="res-val"><span id="s_metre">0</span> <small style="font-size:14px;">METRE</small></span>
+        </div>
+        <div id="s_saglama" style="margin-top:8px; font-size:12px; color:#555; background:#f5f5f5; border-radius:8px; padding:10px 12px; text-align:center;"></div>
     </div>
 
     <div id="pageAdmin" class="page-content" style="display:none;">
@@ -347,6 +425,18 @@
                 <li><b>Tolerans (cm):</b> Makaranın dışından bırakılacak boşluk mesafesi.</li>
                 <li><b>A, C, D Ölçüleri:</b> Üretici teknik çizim ölçüleridir (cm).</li>
             </ul>`,
+        sarim: `
+            <h3>Normal Sarım Hesabı</h3>
+            <p>Hacim/dm³ tahminine dayanan Manuel Hesap'tan farklı olarak, kabloyu makaraya gerçek sarım mantığıyla (göbekten dışa doğru kat kat, her katta yan yana) sararak hesap yapar.</p>
+            <ul>
+                <li><b>Kademeli Tolerans:</b> Otomatik Hesaplama'daki ile aynı tablo kullanılır: kablo çapı ≤20mm → %3, ≤50mm → %5, üstü → %10.</li>
+                <li><b>Kat Sayısı:</b> Göbek ile dış çap arasına, etkin kablo çapına göre kaç kat sığdığı.</li>
+                <li><b>Bir Kattaki Sarım:</b> Makaranın iç genişliğine (C) yan yana kaç sarım sığdığı (sabit, tüm katlarda aynı).</li>
+                <li><b>Toplam Uzunluk:</b> Her katın ORTALAMA çapına göre çevresi ayrı ayrı hesaplanıp toplanır — bu, tek bir iç/dış çap kullanmaktan daha doğru sonuç verir.</li>
+                <li><b>Üst Boşluk:</b> Son kattan dış çapa kadar radyal olarak kalan, tam bir kat daha sarmaya yetmeyen boşluk.</li>
+                <li><b>Alt Boşluk:</b> Her katta, genişlik yönünde tam sarım sayısından artan, bir sarım daha sığmayan kenar boşluğu.</li>
+                <li><b>Sağlama:</b> Aynı ölçülerden bağımsız olarak hacim/kesit alanı yöntemiyle ikinci bir tahmini uzunluk hesaplanır; iki sonuç %15'ten fazla ayrışırsa uyarı verilir.</li>
+            </ul>`,
         admin: `
             <h3>Makara Yönetimi</h3>
             <p>Makara kütüphanesini düzenlemek için kullanılır.</p>
@@ -355,23 +445,37 @@
             </ul>`
     };
 
+    const genelBilgi = `
+        <h3>📖 Uygulama Hakkında</h3>
+        <p>Makara Hesaplama, kablonuz için en uygun makarayı bulmanızı ve makaraya ne kadar kablo sığacağını hesaplamanızı sağlayan bir araçtır. Dört bölümden oluşur:</p>
+        <ul>
+            <li><b>Otomatik Hesaplama:</b> Kayıtlı makara listenizden, girdiğiniz kablo ölçüsüne uygun olanı otomatik önerir.</li>
+            <li><b>Manuel Hesap:</b> Kayıtlı olmayan bir makaranın ölçülerini elle girip hızlı hacim/kapasite tahmini alırsınız.</li>
+            <li><b>Sarım Hesabı:</b> Kat kat, gerçek sarım mantığıyla en hassas uzunluk ve boşluk hesabını yapar.</li>
+            <li><b>Makara Yönetimi:</b> Kendi makara kütüphanenizi (ölçü, kapasite, dara) oluşturup cihazınızda saklarsınız.</li>
+        </ul>
+        <p style="font-size:12px; color:#888;">Tüm sonuçlar tahminidir; kesin üretim/sevkiyat kararlarında fiziksel ölçümle teyit edilmesi önerilir.</p>
+        <hr style="border:none; border-top:1px solid #eee; margin:14px 0;">`;
+
     function toggleInfo() {
         const overlay = document.getElementById('infoOverlay');
         const textDiv = document.getElementById('infoText');
-        textDiv.innerHTML = infoTexts[currentPage];
+        textDiv.innerHTML = genelBilgi + infoTexts[currentPage];
         overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
     }
 
     function showPage(page) {
         currentPage = page;
-        const pages = { hesapla: 'pageHesapla', manual: 'pageManual', admin: 'pageAdmin' };
+        const pages = { hesapla: 'pageHesapla', manual: 'pageManual', sarim: 'pageSarim', admin: 'pageAdmin' };
 
         document.getElementById('pageHesapla').style.display = page === 'hesapla' ? 'block' : 'none';
         document.getElementById('pageManual').style.display = page === 'manual' ? 'block' : 'none';
+        document.getElementById('pageSarim').style.display = page === 'sarim' ? 'block' : 'none';
         document.getElementById('pageAdmin').style.display = page === 'admin' ? 'block' : 'none';
         
         document.getElementById('tabCalc').classList.toggle('active', page === 'hesapla');
         document.getElementById('tabManual').classList.toggle('active', page === 'manual');
+        document.getElementById('tabSarim').classList.toggle('active', page === 'sarim');
         document.getElementById('tabAdmin').classList.toggle('active', page === 'admin');
 
         
@@ -451,6 +555,143 @@
             document.getElementById('m_hacim').value = "0";
             document.getElementById('m_metre').innerText = "0";
         }
+    }
+
+    // ============================================================
+    // NORMAL SARIM HESABI (Kat Kat / Yan Yana) — v2
+    // Göbekten dışa doğru kat kat, her katta yan yana gerçek sarım.
+    // Her katın ORTALAMA çapı kullanılır (iç çap değil!) — bu yüzden
+    // eski versiyona göre sonuç metre daha doğru/yüksek çıkar.
+    // Kademeli tolerans, Otomatik Hesaplama'daki (hesapla()) ile
+    // AYNI tablo: kablo çapı <=20mm -> %3, <=50mm -> %5, üstü -> %10.
+    // Sonuçta: toplam metre + kalan üst (radyal) ve alt (yanal) boşluk
+    // + hacim bazlı bağımsız sağlama (çapraz kontrol) gösterilir.
+    // ============================================================
+    function sarimHesapla() {
+        const d = parseFloat(document.getElementById('s_cap').value) || 0;   // kablo çapı (mm)
+        const A = parseFloat(document.getElementById('s_makA').value) || 0;  // dış çap (cm)
+        const C = parseFloat(document.getElementById('s_makC').value) || 0;  // iç genişlik (cm)
+        const D = parseFloat(document.getElementById('s_makD').value) || 0;  // göbek çapı (cm)
+
+        const toleransInfo = document.getElementById('s_toleransInfo');
+        const uyariDiv = document.getElementById('s_uyari');
+        const ozetDiv = document.getElementById('s_ozet');
+        const tabloDiv = document.getElementById('s_tablo');
+        const metreEl = document.getElementById('s_metre');
+        const saglamaDiv = document.getElementById('s_saglama');
+
+        // Sıfırla
+        uyariDiv.style.display = 'none';
+        toleransInfo.style.display = 'none';
+        ozetDiv.innerHTML = '';
+        tabloDiv.innerHTML = '';
+        saglamaDiv.innerHTML = '';
+        metreEl.innerText = '0';
+
+        if (d <= 0 || A <= 0 || C <= 0 || D <= 0) return; // veri henüz eksik, sessiz bekle
+
+        if (D >= A) {
+            uyariDiv.style.display = 'block';
+            uyariDiv.innerText = 'Göbek çapı (D), makara dış çapından (A) küçük olmalıdır!';
+            return;
+        }
+
+        // Kademeli tolerans (Otomatik Hesaplama ile aynı tablo)
+        const tolOran = d <= 20 ? 1.03 : d <= 50 ? 1.05 : 1.10;
+        const tolYuzde = d <= 20 ? 3 : d <= 50 ? 5 : 10;
+        const dCm = (d / 10) * tolOran;   // etkin (toleranslı) kablo çapı, cm
+
+        toleransInfo.style.display = 'block';
+        toleransInfo.innerHTML = `Kademeli Tolerans: <b>%${tolYuzde}</b> &nbsp;→&nbsp; Etkin Kablo Çapı: <b>${(dCm * 10).toFixed(2)} mm</b>`;
+
+        const siradakiSarim = Math.floor(C / dCm); // bir katta yan yana kaç sarım (genişliğe göre, sabit)
+        const radyalYukseklik = (A - D) / 2;        // göbekten dış çapa kadar sarılabilecek yükseklik
+
+        if (siradakiSarim < 1 || radyalYukseklik < dCm) {
+            uyariDiv.style.display = 'block';
+            uyariDiv.innerText = 'Bu ölçülerle tek bir sarım/kat bile sığmıyor. Ölçüleri kontrol edin.';
+            return;
+        }
+
+        const kat = Math.floor(radyalYukseklik / dCm); // kaç kat sarılabilir
+        const toplamSarim = kat * siradakiSarim;
+
+        // Her katın ORTALAMA çapına göre uzunluk (standart sarım formülü)
+        let toplamUzunlukCm = 0;
+        let rows = '';
+        let kumulatifM = 0;
+        for (let i = 1; i <= kat; i++) {
+            const katCapi = D + (2 * i - 1) * dCm; // o katın ortalama (merkez) çapı
+            const cevreCm = Math.PI * katCapi;     // cm
+            const katUzunlukCm = cevreCm * siradakiSarim;
+            const katUzunlukM = katUzunlukCm / 100;
+            kumulatifM += katUzunlukM;
+            toplamUzunlukCm += katUzunlukCm;
+            rows += `<tr>
+                <td style="padding:5px 6px;">${i}</td>
+                <td style="padding:5px 6px;">${katCapi.toFixed(1)}</td>
+                <td style="padding:5px 6px;">${siradakiSarim}</td>
+                <td style="padding:5px 6px;">${katUzunlukM.toFixed(1)}</td>
+                <td style="padding:5px 6px;">${kumulatifM.toFixed(1)}</td>
+            </tr>`;
+        }
+        const toplamUzunlukM = toplamUzunlukCm / 100;
+
+        // Boşluklar
+        const ustBosluk = Math.max(0, (A - (D + 2 * kat * dCm)) / 2);   // radyal, dış çapa kalan (cm)
+        const altBosluk = Math.max(0, C - (siradakiSarim * dCm));        // yanal, genişlikte kalan (cm)
+
+        // SAĞLAMA: bağımsız hacim bazlı çapraz kontrol
+        // Kullanılabilir halka hacmi (paketleme kaybı düşülmeden, tam geometrik)
+        const halkaHacimCm3 = ((Math.pow(A, 2) - Math.pow(D, 2)) * Math.PI / 4) * C;
+        const paketlemeFaktoru = 0.83; // dairesel kabloların ortalama paketlenme verimi (~0.785-0.907 arası)
+        const kabloKesitCm2 = (Math.PI / 4) * Math.pow(dCm, 2);
+        const saglamaMetre = (halkaHacimCm3 * paketlemeFaktoru) / kabloKesitCm2 / 100;
+        const fark = toplamUzunlukM > 0 ? (((saglamaMetre - toplamUzunlukM) / toplamUzunlukM) * 100) : 0;
+
+        // Ekrana yaz
+        ozetDiv.innerHTML = `
+            <div class="manual-row" style="background:#f9f9f9; margin-top:4px;">
+                <label>Toplam Kat Sayısı</label>
+                <input type="text" readonly value="${kat}" style="background:transparent; font-weight:bold; border:none;">
+            </div>
+            <div class="manual-row" style="background:#f9f9f9;">
+                <label>Bir Kattaki Sarım (adet)</label>
+                <input type="text" readonly value="${siradakiSarim}" style="background:transparent; font-weight:bold; border:none;">
+            </div>
+            <div class="manual-row" style="background:#f9f9f9;">
+                <label>Toplam Sarım Adedi</label>
+                <input type="text" readonly value="${toplamSarim}" style="background:transparent; font-weight:bold; border:none;">
+            </div>
+            <div class="manual-row" style="background:#fff8e1;">
+                <label>Üst Boşluk (Radyal, dış çapa kalan)</label>
+                <input type="text" readonly value="${ustBosluk.toFixed(2)} cm" style="background:transparent; font-weight:bold; border:none; color:#e65100;">
+            </div>
+            <div class="manual-row" style="background:#fff8e1;">
+                <label>Alt Boşluk (Yanal, genişlikte kalan)</label>
+                <input type="text" readonly value="${altBosluk.toFixed(2)} cm" style="background:transparent; font-weight:bold; border:none; color:#e65100;">
+            </div>`;
+
+        tabloDiv.innerHTML = `
+            <div style="overflow-x:auto; margin-top:10px; border:1px solid #eee; border-radius:8px; max-height:220px; overflow-y:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:11px; white-space:nowrap;">
+                <thead>
+                    <tr style="background:#1565c0; color:white; position:sticky; top:0;">
+                        <th style="padding:6px;">Kat</th>
+                        <th style="padding:6px;">Ø(cm)</th>
+                        <th style="padding:6px;">Sarım</th>
+                        <th style="padding:6px;">Kat (m)</th>
+                        <th style="padding:6px;">Küm. (m)</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+            </div>`;
+
+        metreEl.innerText = Math.round(toplamUzunlukM);
+
+        saglamaDiv.innerHTML = `<b>Sağlama (Hacim Bazlı Bağımsız Tahmin):</b> ~${Math.round(saglamaMetre)} metre
+            <br><span style="color:${Math.abs(fark) <= 15 ? '#2e7d32' : '#c62828'};">Fark: %${fark.toFixed(1)} ${Math.abs(fark) <= 15 ? '(tutarlı ✓)' : '(ölçüleri kontrol edin)'}</span>`;
     }
 
     function hesapla() {
@@ -587,7 +828,7 @@
     // sekmeyi göster. Hash yoksa/#hesapla ise varsayılan sekmede kalır.
     (function hashYonlendirmesiUygula() {
         const hash = (window.location.hash || '').replace('#', '');
-        if (hash === 'manual' || hash === 'admin' || hash === 'hesapla') {
+        if (hash === 'manual' || hash === 'sarim' || hash === 'admin' || hash === 'hesapla') {
             showPage(hash);
         }
     })();
