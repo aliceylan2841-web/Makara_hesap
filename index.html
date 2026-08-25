@@ -527,13 +527,14 @@
             <h3>Normal Sarım Hesabı</h3>
             <p>Hacim/dm³ tahminine dayanan Manuel Hesap'tan farklı olarak, kabloyu makaraya gerçek sarım mantığıyla (göbekten dışa doğru kat kat, her katta yan yana) sararak hesap yapar.</p>
             <ul>
-                <li><b>Kademeli Tolerans:</b> Otomatik Hesaplama'daki ile aynı tablo kullanılır: kablo çapı ≤20mm → %3, ≤50mm → %5, üstü → %10.</li>
+                <li><b>📦 Kare/Küp Paketleme Modeli:</b> Yuvarlak kablo dahi olsa, her sarım çapı kadar bir <b>kare hücreye</b> yerleştirilmiş gibi hesaplanır (dairesel iç içe geçme/balpeteği dizilimi varsayılmaz). Bu sayede köşelerde doğal olarak kalan boşluklar (~%78,5 dolu / %21,5 boş) hesaba otomatik dahil olur — <b>garantili/emniyetli</b> bir yaklaşımdır.</li>
+                <li><b>Kademeli Tolerans:</b> Bunun ÜSTÜNE, Otomatik Hesaplama'daki ile aynı tablo eklenir (kablo çapı ≤20mm → %3, ≤50mm → %5, üstü → %10) — üretim toleransı, izolasyon şişmesi ve gevşek sarım payı için ek emniyet.</li>
                 <li><b>Kat Sayısı:</b> Göbek ile dış çap arasına, etkin kablo çapına göre kaç kat sığdığı.</li>
                 <li><b>Bir Kattaki Sarım:</b> Makaranın iç genişliğine (C) yan yana kaç sarım sığdığı (sabit, tüm katlarda aynı).</li>
-                <li><b>Toplam Uzunluk:</b> Her katın ORTALAMA çapına göre çevresi ayrı ayrı hesaplanıp toplanır — bu, tek bir iç/dış çap kullanmaktan daha doğru sonuç verir.</li>
+                <li><b>Toplam Uzunluk:</b> Her katın ORTALAMA çapına göre çevresi ayrı ayrı hesaplanıp toplanır.</li>
                 <li><b>Üst Boşluk:</b> Son kattan dış çapa kadar radyal olarak kalan, tam bir kat daha sarmaya yetmeyen boşluk.</li>
                 <li><b>Alt Boşluk:</b> Her katta, genişlik yönünde tam sarım sayısından artan, bir sarım daha sığmayan kenar boşluğu.</li>
-                <li><b>Sağlama:</b> Aynı ölçülerden bağımsız olarak hacim/kesit alanı yöntemiyle ikinci bir tahmini uzunluk hesaplanır; iki sonuç %15'ten fazla ayrışırsa uyarı verilir.</li>
+                <li><b>Sağlama:</b> Hacim/kesit alanı yöntemiyle, AYNI kare paketleme mantığını kullanan ikinci bir bağımsız tahmin yapılır; iki sonuç %15'ten fazla ayrışırsa uyarı verilir.</li>
             </ul>`,
         admin: `
             <h3>Makara Yönetimi</h3>
@@ -699,8 +700,15 @@
         const tolYuzde = d <= 20 ? 3 : d <= 50 ? 5 : 10;
         const dCm = (d / 10) * tolOran;   // etkin (toleranslı) kablo çapı, cm
 
+        // Paketleme modeli: yuvarlak kablo KARE/KÜP bir hücreye (d x d) yerleştiriliyor
+        // varsayımıyla hesaplanır — dairesel iç içe geçme (balpeteği) VARSAYILMAZ.
+        // Bu, köşelerde doğal olarak kalan boşluğu hesaba dahil eden, garantili/emniyetli yöntemdir.
+        const paketlemeVerimi = (Math.PI / 4) * 100; // ~%78.5 — dairenin kare hücre içindeki alan oranı
+
         toleransInfo.style.display = 'block';
-        toleransInfo.innerHTML = `Kademeli Tolerans: <b>%${tolYuzde}</b> &nbsp;→&nbsp; Etkin Kablo Çapı: <b>${(dCm * 10).toFixed(2)} mm</b>`;
+        toleransInfo.innerHTML = `📦 <b>Paketleme Modeli:</b> Kare/Küp yerleştirme (her sarım, çapı kadar bir kare hücreye oturur — dairesel iç içe geçme varsayılmaz, köşe boşlukları dahildir)<br>
+            Doğal Paketleme Verimi: <b>%${paketlemeVerimi.toFixed(1)}</b> &nbsp;|&nbsp; Kademeli Tolerans (ek emniyet payı): <b>%${tolYuzde}</b><br>
+            Etkin Kablo Çapı (tolerans dahil): <b>${(dCm * 10).toFixed(2)} mm</b>`;
 
         const siradakiSarim = Math.floor(C / dCm); // bir katta yan yana kaç sarım (genişliğe göre, sabit)
         const radyalYukseklik = (A - D) / 2;        // göbekten dış çapa kadar sarılabilecek yükseklik
@@ -740,9 +748,9 @@
         const altBosluk = Math.max(0, C - (siradakiSarim * dCm));        // yanal, genişlikte kalan (cm)
 
         // SAĞLAMA: bağımsız hacim bazlı çapraz kontrol
-        // Kullanılabilir halka hacmi (paketleme kaybı düşülmeden, tam geometrik)
+        // Kullanılabilir halka hacmi (tam geometrik, paketleme kaybı düşülmeden)
         const halkaHacimCm3 = ((Math.pow(A, 2) - Math.pow(D, 2)) * Math.PI / 4) * C;
-        const paketlemeFaktoru = 0.83; // dairesel kabloların ortalama paketlenme verimi (~0.785-0.907 arası)
+        const paketlemeFaktoru = Math.PI / 4; // ~0.785 — ana hesapla TUTARLI kare/küp paketleme varsayımı (köşe boşlukları dahil, garantili)
         const kabloKesitCm2 = (Math.PI / 4) * Math.pow(dCm, 2);
         const saglamaMetre = (halkaHacimCm3 * paketlemeFaktoru) / kabloKesitCm2 / 100;
         const fark = toplamUzunlukM > 0 ? (((saglamaMetre - toplamUzunlukM) / toplamUzunlukM) * 100) : 0;
