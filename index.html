@@ -361,7 +361,7 @@
     <div id="pageSarim" class="page-content" style="display:none;">
         <h2>Normal Sarım Hesabı (Kat Kat / Yan Yana)</h2>
         <button onclick="document.getElementById('rehberOverlay').style.display='block'" style="width:100%; padding:10px; background:#e3f2fd; color:#1565c0; border:2px solid #1565c0; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; margin-bottom:10px;">📐 Ölçü Rehberi &amp; Hacim Hesapla</button>
-        <p style="font-size:12px; color:#666; margin:0 0 10px 0; line-height:1.4;">Göbekten dışa doğru <b>kat kat</b>, her katta <b>yan yana</b> gerçek sarım hesabı. Her kat kendi ortalama çapına göre ayrı hesaplanır. Tolerans, Otomatik Hesaplama'daki ile aynı kademeli tabloyu kullanır.</p>
+        <p style="font-size:12px; color:#666; margin:0 0 10px 0; line-height:1.4;">Göbekten dışa doğru <b>kat kat</b>, her katta <b>yan yana</b> gerçek sarım hesabı. Her kat kendi ortalama çapına göre ayrı hesaplanır. Yuvarlak kablo, güvenlik için <b>kare/küp hücreye</b> yerleştirilmiş gibi hesaplanır — bu doğal boşluk payı zaten yeterli olduğundan ayrıca yüzdesel tolerans eklenmez.</p>
 
         <div class="manual-row"><label>Kablo Çapı (mm)</label><input type="number" id="s_cap" placeholder="0" oninput="sarimHesapla()"></div>
         <div class="manual-row"><label>Makara Dış Çap (A) (cm)</label><input type="number" id="s_makA" placeholder="0" oninput="sarimHesapla()"></div>
@@ -527,9 +527,8 @@
             <h3>Normal Sarım Hesabı</h3>
             <p>Hacim/dm³ tahminine dayanan Manuel Hesap'tan farklı olarak, kabloyu makaraya gerçek sarım mantığıyla (göbekten dışa doğru kat kat, her katta yan yana) sararak hesap yapar.</p>
             <ul>
-                <li><b>📦 Kare/Küp Paketleme Modeli:</b> Yuvarlak kablo dahi olsa, her sarım çapı kadar bir <b>kare hücreye</b> yerleştirilmiş gibi hesaplanır (dairesel iç içe geçme/balpeteği dizilimi varsayılmaz). Bu sayede köşelerde doğal olarak kalan boşluklar (~%78,5 dolu / %21,5 boş) hesaba otomatik dahil olur — <b>garantili/emniyetli</b> bir yaklaşımdır.</li>
-                <li><b>Kademeli Tolerans:</b> Bunun ÜSTÜNE, Otomatik Hesaplama'daki ile aynı tablo eklenir (kablo çapı ≤20mm → %3, ≤50mm → %5, üstü → %10) — üretim toleransı, izolasyon şişmesi ve gevşek sarım payı için ek emniyet.</li>
-                <li><b>Kat Sayısı:</b> Göbek ile dış çap arasına, etkin kablo çapına göre kaç kat sığdığı.</li>
+                <li><b>📦 Kare/Küp Paketleme Modeli:</b> Yuvarlak kablo dahi olsa, her sarım çapı kadar bir <b>kare hücreye</b> yerleştirilmiş gibi hesaplanır (dairesel iç içe geçme/balpeteği dizilimi varsayılmaz). Bu sayede köşelerde doğal olarak kalan boşluklar (~%78,5 dolu / %21,5 boş) hesaba otomatik dahil olur — <b>garantili/emniyetli</b> bir yaklaşımdır. Bu boşluk payı yeterli olduğu için ayrıca yüzdesel bir tolerans eklenmez.</li>
+                <li><b>Kat Sayısı:</b> Göbek ile dış çap arasına, kablo çapına göre kaç kat sığdığı.</li>
                 <li><b>Bir Kattaki Sarım:</b> Makaranın iç genişliğine (C) yan yana kaç sarım sığdığı (sabit, tüm katlarda aynı).</li>
                 <li><b>Toplam Uzunluk:</b> Her katın ORTALAMA çapına göre çevresi ayrı ayrı hesaplanıp toplanır.</li>
                 <li><b>Üst Boşluk:</b> Son kattan dış çapa kadar radyal olarak kalan, tam bir kat daha sarmaya yetmeyen boşluk.</li>
@@ -695,20 +694,19 @@
             return;
         }
 
-        // Kademeli tolerans (Otomatik Hesaplama ile aynı tablo)
-        const tolOran = d <= 20 ? 1.03 : d <= 50 ? 1.05 : 1.10;
-        const tolYuzde = d <= 20 ? 3 : d <= 50 ? 5 : 10;
-        const dCm = (d / 10) * tolOran;   // etkin (toleranslı) kablo çapı, cm
-
         // Paketleme modeli: yuvarlak kablo KARE/KÜP bir hücreye (d x d) yerleştiriliyor
         // varsayımıyla hesaplanır — dairesel iç içe geçme (balpeteği) VARSAYILMAZ.
         // Bu, köşelerde doğal olarak kalan boşluğu hesaba dahil eden, garantili/emniyetli yöntemdir.
+        // Ayrıca yüzdesel bir tolerans eklenmez: kare hücre mantığı zaten kendi içinde
+        // yeterli emniyet payını (~%21,5 boşluk) barındırır.
+        const dCm = d / 10;   // kablo çapı, cm (ek tolerans çarpanı YOK)
         const paketlemeVerimi = (Math.PI / 4) * 100; // ~%78.5 — dairenin kare hücre içindeki alan oranı
 
         toleransInfo.style.display = 'block';
         toleransInfo.innerHTML = `📦 <b>Paketleme Modeli:</b> Kare/Küp yerleştirme (her sarım, çapı kadar bir kare hücreye oturur — dairesel iç içe geçme varsayılmaz, köşe boşlukları dahildir)<br>
-            Doğal Paketleme Verimi: <b>%${paketlemeVerimi.toFixed(1)}</b> &nbsp;|&nbsp; Kademeli Tolerans (ek emniyet payı): <b>%${tolYuzde}</b><br>
-            Etkin Kablo Çapı (tolerans dahil): <b>${(dCm * 10).toFixed(2)} mm</b>`;
+            Doğal Paketleme Verimi: <b>%${paketlemeVerimi.toFixed(1)}</b> (ayrıca yüzdesel tolerans eklenmez — bu boşluk zaten yeterli emniyeti sağlar)<br>
+            Kullanılan Kablo Çapı: <b>${d.toFixed(2)} mm</b>`;
+
 
         const siradakiSarim = Math.floor(C / dCm); // bir katta yan yana kaç sarım (genişliğe göre, sabit)
         const radyalYukseklik = (A - D) / 2;        // göbekten dış çapa kadar sarılabilecek yükseklik
