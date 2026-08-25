@@ -361,7 +361,7 @@
     <div id="pageSarim" class="page-content" style="display:none;">
         <h2>Normal Sarım Hesabı (Kat Kat / Yan Yana)</h2>
         <button onclick="document.getElementById('rehberOverlay').style.display='block'" style="width:100%; padding:10px; background:#e3f2fd; color:#1565c0; border:2px solid #1565c0; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; margin-bottom:10px;">📐 Ölçü Rehberi &amp; Hacim Hesapla</button>
-        <p style="font-size:12px; color:#666; margin:0 0 10px 0; line-height:1.4;">Göbekten dışa doğru <b>kat kat</b>, her katta <b>yan yana</b> gerçek sarım hesabı. Her kat kendi ortalama çapına göre ayrı hesaplanır. Yuvarlak kablo, güvenlik için <b>kare/küp hücreye</b> yerleştirilmiş gibi hesaplanır — bu doğal boşluk payı zaten yeterli olduğundan ayrıca yüzdesel tolerans eklenmez.</p>
+        <p style="font-size:12px; color:#666; margin:0 0 10px 0; line-height:1.4;">Göbekten dışa doğru <b>kat kat</b>, her katta <b>yan yana</b> gerçek sarım hesabı. Kablo, güvenlik için <b>kare/küp hücreye</b> yerleştirilmiş gibi hesaplanır. Ayrıca kablo çapına göre otomatik bir <b>kenar güvenlik payı</b> (5-10-15 cm) düşülerek kablonun makara kenarına dayanmayacağı <b>güvenli/önerilen</b> uzunluk hesaplanır.</p>
 
         <div class="manual-row"><label>Kablo Çapı (mm)</label><input type="number" id="s_cap" placeholder="0" oninput="sarimHesapla()"></div>
         <div class="manual-row"><label>Makara Dış Çap (A) (cm)</label><input type="number" id="s_makA" placeholder="0" oninput="sarimHesapla()"></div>
@@ -527,13 +527,11 @@
             <h3>Normal Sarım Hesabı</h3>
             <p>Hacim/dm³ tahminine dayanan Manuel Hesap'tan farklı olarak, kabloyu makaraya gerçek sarım mantığıyla (göbekten dışa doğru kat kat, her katta yan yana) sararak hesap yapar.</p>
             <ul>
-                <li><b>📦 Kare/Küp Paketleme Modeli:</b> Yuvarlak kablo dahi olsa, her sarım çapı kadar bir <b>kare hücreye</b> yerleştirilmiş gibi hesaplanır (dairesel iç içe geçme/balpeteği dizilimi varsayılmaz). Bu sayede köşelerde doğal olarak kalan boşluklar (~%78,5 dolu / %21,5 boş) hesaba otomatik dahil olur — <b>garantili/emniyetli</b> bir yaklaşımdır. Bu boşluk payı yeterli olduğu için ayrıca yüzdesel bir tolerans eklenmez.</li>
-                <li><b>Kat Sayısı:</b> Göbek ile dış çap arasına, kablo çapına göre kaç kat sığdığı.</li>
-                <li><b>Bir Kattaki Sarım:</b> Makaranın iç genişliğine (C) yan yana kaç sarım sığdığı (sabit, tüm katlarda aynı).</li>
-                <li><b>Toplam Uzunluk:</b> Her katın ORTALAMA çapına göre çevresi ayrı ayrı hesaplanıp toplanır.</li>
-                <li><b>Üst Boşluk:</b> Son kattan dış çapa kadar radyal olarak kalan, tam bir kat daha sarmaya yetmeyen boşluk.</li>
-                <li><b>Alt Boşluk:</b> Her katta, genişlik yönünde tam sarım sayısından artan, bir sarım daha sığmayan kenar boşluğu.</li>
-                <li><b>Sağlama:</b> Hacim/kesit alanı yöntemiyle, AYNI kare paketleme mantığını kullanan ikinci bir bağımsız tahmin yapılır; iki sonuç %15'ten fazla ayrışırsa uyarı verilir.</li>
+                <li><b>📦 Kare/Küp Paketleme Modeli:</b> Yuvarlak kablo dahi olsa, her sarım çapı kadar bir <b>kare hücreye</b> yerleştirilmiş gibi hesaplanır (dairesel iç içe geçme/balpeteği dizilimi varsayılmaz). Köşelerde doğal olarak kalan boşluk (~%78,5 dolu / %21,5 boş) hesaba otomatik dahildir.</li>
+                <li><b>🛡️ Kenar Güvenlik Payı:</b> Kablo makaranın dış çapına veya yan flanşına dayanmasın diye, kablo çapına göre otomatik bir pay bırakılır: ≤20mm → 5cm, ≤50mm → 10cm, üstü → 15cm. Bu pay hem dış çaptan hem genişlikten düşülür.</li>
+                <li><b>Gösterilen Sonuç = Güvenli/Önerilen:</b> Ana sonuç, kenar payı düşüldükten SONRAKİ değerdir. Kenar payı olmadan teorik maksimum, sağlama kutusunun altında referans olarak ayrıca gösterilir — üretimde teoriğe değil, güvenli değere göre hareket edin.</li>
+                <li><b>Dış Çapa / Genişliğe Kalan Ek Boşluk:</b> Bunlar İKİ FARKLI boyuttur (biri radyal, diğeri yanal) — birbirine eşit olmaları gerekmez. Zaten kenar payı ayrıca düşülmüştür; buradaki değerler sadece tam kat/sarım sayısına yuvarlarken kalan küçük artıklardır.</li>
+                <li><b>Sağlama:</b> Aynı (kenar paylı) ölçülerden, hacim/kesit alanı yöntemiyle bağımsız bir ikinci tahmin yapılır; iki sonuç %15'ten fazla ayrışırsa uyarı verilir.</li>
             </ul>`,
         admin: `
             <h3>Makara Yönetimi</h3>
@@ -658,13 +656,42 @@
     // ============================================================
     // NORMAL SARIM HESABI (Kat Kat / Yan Yana) — v2
     // Göbekten dışa doğru kat kat, her katta yan yana gerçek sarım.
-    // Her katın ORTALAMA çapı kullanılır (iç çap değil!) — bu yüzden
-    // eski versiyona göre sonuç metre daha doğru/yüksek çıkar.
-    // Kademeli tolerans, Otomatik Hesaplama'daki (hesapla()) ile
-    // AYNI tablo: kablo çapı <=20mm -> %3, <=50mm -> %5, üstü -> %10.
-    // Sonuçta: toplam metre + kalan üst (radyal) ve alt (yanal) boşluk
-    // + hacim bazlı bağımsız sağlama (çapraz kontrol) gösterilir.
+    // Her katın ORTALAMA çapı kullanılır (iç çap değil!).
+    // Paketleme: kare/küp hücre mantığı (dairesel iç içe geçme varsayılmaz).
+    // KENAR GÜVENLİK PAYI: kablo, makaranın dış çapına ve yan
+    // flanşlarına dayanmasın diye kablo çapına göre kademeli bir pay
+    // (5/10/15 cm) hem dış çaptan hem genişlikten düşülür. Bu paylı
+    // (güvenli/önerilen) sonuç ASIL sonuç olarak gösterilir; paysız
+    // teorik maksimum ise referans olarak ayrıca belirtilir.
     // ============================================================
+    function hesaplaKatlar(A_eff, C_eff, D, dCm) {
+        const siradakiSarim = Math.floor(C_eff / dCm);
+        const radyalYukseklik = (A_eff - D) / 2;
+        if (siradakiSarim < 1 || radyalYukseklik < dCm) return null;
+        const kat = Math.floor(radyalYukseklik / dCm);
+        const toplamSarim = kat * siradakiSarim;
+        let toplamUzunlukCm = 0, rows = '', kumulatifM = 0;
+        for (let i = 1; i <= kat; i++) {
+            const katCapi = D + (2 * i - 1) * dCm;
+            const cevreCm = Math.PI * katCapi;
+            const katUzunlukCm = cevreCm * siradakiSarim;
+            const katUzunlukM = katUzunlukCm / 100;
+            kumulatifM += katUzunlukM;
+            toplamUzunlukCm += katUzunlukCm;
+            rows += `<tr>
+                <td style="padding:5px 6px;">${i}</td>
+                <td style="padding:5px 6px;">${katCapi.toFixed(1)}</td>
+                <td style="padding:5px 6px;">${siradakiSarim}</td>
+                <td style="padding:5px 6px;">${katUzunlukM.toFixed(1)}</td>
+                <td style="padding:5px 6px;">${kumulatifM.toFixed(1)}</td>
+            </tr>`;
+        }
+        const toplamUzunlukM = toplamUzunlukCm / 100;
+        const disaKalanBosluk = Math.max(0, (A_eff - (D + 2 * kat * dCm)) / 2);   // radyal, kullanılabilir dış sınıra kalan (cm)
+        const kenardaKalanBosluk = Math.max(0, C_eff - (siradakiSarim * dCm));     // yanal, kullanılabilir genişliğe kalan (cm)
+        return { kat, siradakiSarim, toplamSarim, toplamUzunlukM, rows, disaKalanBosluk, kenardaKalanBosluk };
+    }
+
     function sarimHesapla() {
         const d = parseFloat(document.getElementById('s_cap').value) || 0;   // kablo çapı (mm)
         const A = parseFloat(document.getElementById('s_makA').value) || 0;  // dış çap (cm)
@@ -694,87 +721,50 @@
             return;
         }
 
-        // Paketleme modeli: yuvarlak kablo KARE/KÜP bir hücreye (d x d) yerleştiriliyor
-        // varsayımıyla hesaplanır — dairesel iç içe geçme (balpeteği) VARSAYILMAZ.
-        // Bu, köşelerde doğal olarak kalan boşluğu hesaba dahil eden, garantili/emniyetli yöntemdir.
-        // Ayrıca yüzdesel bir tolerans eklenmez: kare hücre mantığı zaten kendi içinde
-        // yeterli emniyet payını (~%21,5 boşluk) barındırır.
-        const dCm = d / 10;   // kablo çapı, cm (ek tolerans çarpanı YOK)
-        const paketlemeVerimi = (Math.PI / 4) * 100; // ~%78.5 — dairenin kare hücre içindeki alan oranı
+        const dCm = d / 10;   // kablo çapı, cm (kare/küp paketleme — ek tolerans çarpanı yok)
+        const paketlemeVerimi = (Math.PI / 4) * 100; // ~%78.5
+
+        // Kenar güvenlik payı: kablo çapına göre kademeli (5 / 10 / 15 cm)
+        const kenarPay = d <= 20 ? 5 : d <= 50 ? 10 : 15;
+        const A_guvenli = Math.max(0, A - 2 * kenarPay); // dış çaptan pay düşülür (iki taraf: radyal)
+        const C_guvenli = Math.max(0, C - 2 * kenarPay); // genişlikten pay düşülür (iki flanş kenarı)
 
         toleransInfo.style.display = 'block';
-        toleransInfo.innerHTML = `📦 <b>Paketleme Modeli:</b> Kare/Küp yerleştirme (her sarım, çapı kadar bir kare hücreye oturur — dairesel iç içe geçme varsayılmaz, köşe boşlukları dahildir)<br>
-            Doğal Paketleme Verimi: <b>%${paketlemeVerimi.toFixed(1)}</b> (ayrıca yüzdesel tolerans eklenmez — bu boşluk zaten yeterli emniyeti sağlar)<br>
-            Kullanılan Kablo Çapı: <b>${d.toFixed(2)} mm</b>`;
+        toleransInfo.innerHTML = `📦 <b>Paketleme Modeli:</b> Kare/Küp yerleştirme (köşe boşlukları dahil, ayrıca yüzdesel tolerans eklenmez) — Doğal Verim: <b>%${paketlemeVerimi.toFixed(1)}</b><br>
+            🛡️ <b>Kenar Güvenlik Payı:</b> Kablo, makara kenarına/flanşına dayanmasın diye kablo çapına göre otomatik <b>${kenarPay} cm</b> pay bırakılır (dış çaptan ve genişlikten).`;
 
+        const guvenli = hesaplaKatlar(A_guvenli, C_guvenli, D, dCm);
+        const teorik = hesaplaKatlar(A, C, D, dCm);
 
-        const siradakiSarim = Math.floor(C / dCm); // bir katta yan yana kaç sarım (genişliğe göre, sabit)
-        const radyalYukseklik = (A - D) / 2;        // göbekten dış çapa kadar sarılabilecek yükseklik
-
-        if (siradakiSarim < 1 || radyalYukseklik < dCm) {
+        if (!guvenli) {
             uyariDiv.style.display = 'block';
-            uyariDiv.innerText = 'Bu ölçülerle tek bir sarım/kat bile sığmıyor. Ölçüleri kontrol edin.';
+            uyariDiv.innerText = `Kenar güvenlik payı (${kenarPay} cm) düşüldükten sonra tek bir sarım/kat bile sığmıyor. Makara ölçüleri bu kablo için çok küçük.`;
             return;
         }
 
-        const kat = Math.floor(radyalYukseklik / dCm); // kaç kat sarılabilir
-        const toplamSarim = kat * siradakiSarim;
-
-        // Her katın ORTALAMA çapına göre uzunluk (standart sarım formülü)
-        let toplamUzunlukCm = 0;
-        let rows = '';
-        let kumulatifM = 0;
-        for (let i = 1; i <= kat; i++) {
-            const katCapi = D + (2 * i - 1) * dCm; // o katın ortalama (merkez) çapı
-            const cevreCm = Math.PI * katCapi;     // cm
-            const katUzunlukCm = cevreCm * siradakiSarim;
-            const katUzunlukM = katUzunlukCm / 100;
-            kumulatifM += katUzunlukM;
-            toplamUzunlukCm += katUzunlukCm;
-            rows += `<tr>
-                <td style="padding:5px 6px;">${i}</td>
-                <td style="padding:5px 6px;">${katCapi.toFixed(1)}</td>
-                <td style="padding:5px 6px;">${siradakiSarim}</td>
-                <td style="padding:5px 6px;">${katUzunlukM.toFixed(1)}</td>
-                <td style="padding:5px 6px;">${kumulatifM.toFixed(1)}</td>
-            </tr>`;
-        }
-        const toplamUzunlukM = toplamUzunlukCm / 100;
-
-        // Boşluklar
-        const ustBosluk = Math.max(0, (A - (D + 2 * kat * dCm)) / 2);   // radyal, dış çapa kalan (cm)
-        const altBosluk = Math.max(0, C - (siradakiSarim * dCm));        // yanal, genişlikte kalan (cm)
-
-        // SAĞLAMA: bağımsız hacim bazlı çapraz kontrol
-        // Kullanılabilir halka hacmi (tam geometrik, paketleme kaybı düşülmeden)
-        const halkaHacimCm3 = ((Math.pow(A, 2) - Math.pow(D, 2)) * Math.PI / 4) * C;
-        const paketlemeFaktoru = Math.PI / 4; // ~0.785 — ana hesapla TUTARLI kare/küp paketleme varsayımı (köşe boşlukları dahil, garantili)
-        const kabloKesitCm2 = (Math.PI / 4) * Math.pow(dCm, 2);
-        const saglamaMetre = (halkaHacimCm3 * paketlemeFaktoru) / kabloKesitCm2 / 100;
-        const fark = toplamUzunlukM > 0 ? (((saglamaMetre - toplamUzunlukM) / toplamUzunlukM) * 100) : 0;
-
-        // Ekrana yaz
+        // Ekrana yaz — ASIL sonuç GÜVENLİ/ÖNERİLEN senaryo
         ozetDiv.innerHTML = `
             <div class="manual-row" style="background:#f9f9f9; margin-top:4px;">
-                <label>Toplam Kat Sayısı</label>
-                <input type="text" readonly value="${kat}" style="background:transparent; font-weight:bold; border:none;">
+                <label>Toplam Kat Sayısı (Güvenli)</label>
+                <input type="text" readonly value="${guvenli.kat}" style="background:transparent; font-weight:bold; border:none;">
             </div>
             <div class="manual-row" style="background:#f9f9f9;">
                 <label>Bir Kattaki Sarım (adet)</label>
-                <input type="text" readonly value="${siradakiSarim}" style="background:transparent; font-weight:bold; border:none;">
+                <input type="text" readonly value="${guvenli.siradakiSarim}" style="background:transparent; font-weight:bold; border:none;">
             </div>
             <div class="manual-row" style="background:#f9f9f9;">
                 <label>Toplam Sarım Adedi</label>
-                <input type="text" readonly value="${toplamSarim}" style="background:transparent; font-weight:bold; border:none;">
+                <input type="text" readonly value="${guvenli.toplamSarim}" style="background:transparent; font-weight:bold; border:none;">
             </div>
             <div class="manual-row" style="background:#fff8e1;">
-                <label>Üst Boşluk (Radyal, dış çapa kalan)</label>
-                <input type="text" readonly value="${ustBosluk.toFixed(2)} cm" style="background:transparent; font-weight:bold; border:none; color:#e65100;">
+                <label>Dış Çapa Kalan Ek Boşluk (Radyal)</label>
+                <input type="text" readonly value="${guvenli.disaKalanBosluk.toFixed(2)} cm" style="background:transparent; font-weight:bold; border:none; color:#e65100;">
             </div>
             <div class="manual-row" style="background:#fff8e1;">
-                <label>Alt Boşluk (Yanal, genişlikte kalan)</label>
-                <input type="text" readonly value="${altBosluk.toFixed(2)} cm" style="background:transparent; font-weight:bold; border:none; color:#e65100;">
-            </div>`;
+                <label>Genişlikte Kalan Ek Boşluk (Yanal)</label>
+                <input type="text" readonly value="${guvenli.kenardaKalanBosluk.toFixed(2)} cm" style="background:transparent; font-weight:bold; border:none; color:#e65100;">
+            </div>
+            <p style="font-size:11px; color:#888; margin:6px 2px 0; line-height:1.4;">⚠️ Bu iki değer FARKLI boyutlardır (biri dış çapa doğru radyal, diğeri genişlik yönünde yanal) — birbirine eşit olmaları gerekmez. Zaten ${kenarPay} cm'lik kenar payı ayrıca düşülmüş durumda; buradaki değerler o payın DAHİLİNDE, tam kat/sarım sayısına yuvarlamadan kalan ufak artıklardır.</p>`;
 
         tabloDiv.innerHTML = `
             <div style="overflow-x:auto; margin-top:10px; border:1px solid #eee; border-radius:8px; max-height:220px; overflow-y:auto;">
@@ -788,14 +778,25 @@
                         <th style="padding:6px;">Küm. (m)</th>
                     </tr>
                 </thead>
-                <tbody>${rows}</tbody>
+                <tbody>${guvenli.rows}</tbody>
             </table>
             </div>`;
 
-        metreEl.innerText = Math.round(toplamUzunlukM);
+        metreEl.innerText = Math.round(guvenli.toplamUzunlukM);
+
+        // SAĞLAMA: bağımsız hacim bazlı çapraz kontrol (güvenli senaryo ile aynı ölçüler)
+        const halkaHacimCm3 = ((Math.pow(A_guvenli, 2) - Math.pow(D, 2)) * Math.PI / 4) * C_guvenli;
+        const kabloKesitCm2 = (Math.PI / 4) * Math.pow(dCm, 2);
+        const saglamaMetre = (halkaHacimCm3 * (Math.PI / 4)) / kabloKesitCm2 / 100;
+        const fark = guvenli.toplamUzunlukM > 0 ? (((saglamaMetre - guvenli.toplamUzunlukM) / guvenli.toplamUzunlukM) * 100) : 0;
+
+        const teorikSatiri = teorik
+            ? `<br><span style="font-size:11px; color:#999;">Kenar payı olmadan teorik maksimum: ~${Math.round(teorik.toplamUzunlukM)} metre (${teorik.kat} kat) — bu sınıra kadar sarmayın, kabloyu kenara/flanşa dayamamak için yukarıdaki GÜVENLİ değeri esas alın.</span>`
+            : '';
 
         saglamaDiv.innerHTML = `<b>Sağlama (Hacim Bazlı Bağımsız Tahmin):</b> ~${Math.round(saglamaMetre)} metre
-            <br><span style="color:${Math.abs(fark) <= 15 ? '#2e7d32' : '#c62828'};">Fark: %${fark.toFixed(1)} ${Math.abs(fark) <= 15 ? '(tutarlı ✓)' : '(ölçüleri kontrol edin)'}</span>`;
+            <br><span style="color:${Math.abs(fark) <= 15 ? '#2e7d32' : '#c62828'};">Fark: %${fark.toFixed(1)} ${Math.abs(fark) <= 15 ? '(tutarlı ✓)' : '(ölçüleri kontrol edin)'}</span>
+            ${teorikSatiri}`;
     }
 
     function hesapla() {
