@@ -733,14 +733,14 @@
             kumulatifM += katUzunlukM;
             const sarilmisCap = D + 2 * i * dTol;
             const kapamali = sarilmisCap + pay;
-            let bg, durum, fw = '400';
-            if (i < kat)            { bg = '#ffffff'; durum = 'Sığar'; }
-            else if (i === kat)     { bg = '#c8f0c8'; durum = '✔ OLMASI GEREKEN'; fw = '800'; }
-            else if (sarilmisCap <= A) { bg = '#fff3cd'; durum = 'Pay içine girer'; }
-            else                    { bg = '#ffd6d6'; durum = '✖ Sığmaz'; }
+            let bg, fg, durum, fw = '600';
+            if (i < kat)            { bg = '#ffffff'; fg = '#111111'; durum = 'Sığar'; }
+            else if (i === kat)     { bg = '#2e9e44'; fg = '#ffffff'; durum = '✔ OLMASI GEREKEN'; fw = '800'; }
+            else if (sarilmisCap <= A) { bg = '#ffc107'; fg = '#3b2a00'; durum = 'Pay içine girer'; fw = '700'; }
+            else                    { bg = '#e53935'; fg = '#ffffff'; durum = '✖ Sığmaz'; fw = '700'; }
             if (i <= kat) toplamUzunlukCm = kumulatifM * 100;
             if (sarilmisCap <= A) { fullM = kumulatifM; fullSarim = i; }
-            rows += `<tr style="background:${bg}; font-weight:${fw};">
+            rows += `<tr style="background:${bg}; color:${fg}; font-weight:${fw}; font-size:12.5px;">
                 <td style="padding:5px 6px;">${i}</td>
                 <td style="padding:5px 6px;">${katCapi.toFixed(1)}</td>
                 <td style="padding:5px 6px;">${sarilmisCap.toFixed(1)}</td>
@@ -847,7 +847,7 @@
         const hucreCm2 = dTol * dTol;
         const saglamaMetre = halkaHacimCm3 / hucreCm2 / 100 * 1; // kare hücre: hacim / (d² ) = uzunluk (cm)
         const fark = r.toplamUzunlukM > 0 ? ((saglamaMetre - r.toplamUzunlukM) / r.toplamUzunlukM) * 100 : 0;
-        const fullBilgi = `<div style="text-align:left; margin-bottom:8px; padding:8px 10px; border-radius:8px; background:#fff3cd; color:#5d4300;">
+        const fullBilgi = `<div style="text-align:left; margin-bottom:8px; padding:8px 10px; border-radius:8px; background:#ffc107; color:#3b2a00; font-weight:600;">
             <b>Karar için — makara FULL alırsa</b> (üst pay olmadan, flanşa kadar): <b>${r.katFull} kat ≈ ${Math.round(r.fullM)} m</b><br>
             Önerilen (${pay} cm üst paylı): <b>${r.kat} kat ≈ ${Math.round(r.toplamUzunlukM)} m</b> &nbsp;→&nbsp; fark: <b>${Math.round(r.fullM - r.toplamUzunlukM)} m</b>
             </div>`;
